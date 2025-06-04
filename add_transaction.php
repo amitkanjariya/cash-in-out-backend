@@ -9,6 +9,7 @@ $amount = isset($_POST['amount']) ? floatval($_POST['amount']) : 0;
 $detail = isset($_POST['detail']) ? trim($_POST['detail']) : '';
 $type = isset($_POST['type']) ? trim($_POST['type']) : '';
 $customer_phone = isset($_POST['customer_phone']) ? trim($_POST['customer_phone']) : '';
+$to_id = isset($_POST['customer_id']) ? intval($_POST['customer_id']) : null;
 
 if ($user_id <= 0 || $amount <= 0 || !in_array($type, ['plus', 'minus'])) {
     $response['success'] = false;
@@ -16,8 +17,6 @@ if ($user_id <= 0 || $amount <= 0 || !in_array($type, ['plus', 'minus'])) {
     echo json_encode($response);
     exit;
 }
-
-$to_id = null;
 
 // If customer phone is provided, try to find their contact ID
 if (!empty($customer_phone)) {
