@@ -15,7 +15,7 @@ if ($user_id <= 0) {
 
 $sql = "
     SELECT 
-        t.amount, t.detail, t.type, t.created_at,
+        t.amount, t.detail, t.type, t.created_at, t.to_id,
         c.name AS contact_name,
         c.phone AS contact_phone
     FROM transactions t

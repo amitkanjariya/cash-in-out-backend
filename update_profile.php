@@ -28,7 +28,7 @@ $profileImageName = null;
 if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == 0) {
     $targetDir = "upload/";
     $extension = pathinfo($_FILES['profile_image']['name'], PATHINFO_EXTENSION);
-    $profileImageName = uniqid("IMG_", true) . "." . $extension;
+    $profileImageName = "img_" . $phone . "." . $extension;
     $targetFile = $targetDir . $profileImageName;
 
     // Move uploaded file
