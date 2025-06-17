@@ -10,6 +10,7 @@ $detail = isset($_POST['detail']) ? trim($_POST['detail']) : '';
 $type = isset($_POST['type']) ? trim($_POST['type']) : '';
 $customer_phone = isset($_POST['customer_phone']) ? trim($_POST['customer_phone']) : '';
 $to_id = isset($_POST['customer_id']) ? intval($_POST['customer_id']) : null;
+$created_at = isset($_POST['created_at']) ? trim($_POST['created_at']) : null;
 
 if ($user_id <= 0 || $amount <= 0 || !in_array($type, ['plus', 'minus'])) {
     $response['success'] = false;
@@ -30,9 +31,23 @@ if (!empty($customer_phone)) {
     $stmt->close();
 }
 
+// Validate and sanitize created_at
+if ($created_at !== null) {
+    $timestamp = strtotime($created_at);
+    if (!$timestamp) {
+        $response['success'] = false;
+        $response['message'] = 'Invalid created_at format.';
+        echo json_encode($response);
+        exit;
+    }
+    $created_at = date('Y-m-d H:i:s', $timestamp);
+} else {
+    $created_at = date('Y-m-d H:i:s');
+}
+
 // Prepare the INSERT query
-$stmt = $conn->prepare("INSERT INTO transactions (user_id, to_id, amount, detail, type, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
-$stmt->bind_param("iisss", $user_id, $to_id, $amount, $detail, $type);
+$stmt = $conn->prepare("INSERT INTO transactions (user_id, to_id, amount, detail, type, created_at) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("iidsss", $user_id, $to_id, $amount, $detail, $type, $created_at);
 
 if ($stmt->execute()) {
     $response['success'] = true;
